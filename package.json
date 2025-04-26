@@ -1,0 +1,26 @@
+{
+  "name": "chat-with-a-pdf",
+  "version": "1.0.0",
+  "description": "This project allows you to have interactive conversations with PDF documents using Google's Gemini AI for natural language processing and understanding.",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx tsx src/index.ts",
+    "chat": "npx tsx src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@genkit-ai/googleai": "^1.7.0",
+    "dotenv": "^16.4.5",
+    "genkit": "^1.7.0",
+    "pdf-parse": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^8.2.3",
+    "@types/pdf-parse": "^1.1.4",
+    "tsx": "^4.7.1",
+    "typescript": "^5.3.3"
+  }
+}
