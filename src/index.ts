@@ -17,13 +17,12 @@ const ai = genkit({
 // Main function to handle the chat with PDF
 async function chatWithPDF(filename: string, customPrompt?: string) {
   try {
-    // Step 1: Load and parse the PDF
     console.log(`Loading PDF file: ${filename}`);
     const dataBuffer = fs.readFileSync(filename);
     const { text } = await pdf(dataBuffer);
     
-    // Step 2: Construct the prompt
-    const defaultPrompt = "You are a helpful assistant that can answer questions about the contents of this PDF file. Please provide accurate and relevant information based on the document content.";
+    // TODO: Add custom prompt
+    const defaultPrompt = "";
     const prompt = `
       ${customPrompt || defaultPrompt}
       
@@ -31,14 +30,14 @@ async function chatWithPDF(filename: string, customPrompt?: string) {
       ${text}
     `;
 
-    // Step 3: Initialize chat
+    // Initialize chat
     const chat = ai.chat({ system: prompt });
     const readline = createInterface(process.stdin, process.stdout);
     
     console.log("\nChat with PDF initialized. You can now ask questions about the document.");
     console.log("Type 'exit' to quit.\n");
 
-    // Step 4: Chat loop
+    // Handle chat loop
     while (true) {
       const userInput = await readline.question("> ");
       
@@ -70,8 +69,7 @@ if (!filename) {
   process.exit(1);
 }
 
-// Get optional custom prompt
-const customPrompt = process.argv[3];
 
-// Start the chat
-chatWithPDF(filename, customPrompt);
+// TODO: Read custom prompt
+
+// TODO: Chat with PDF
