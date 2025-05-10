@@ -28,6 +28,43 @@ interface Recipe {
   tags: string[];
 }
 
+// Create a type-safe schema object
+const recipeSchema = {
+  type: 'object',
+  properties: {
+    title: { type: 'string' },
+    description: { type: 'string' },
+    ingredients: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+          amount: { type: 'string' },
+          unit: { type: 'string' }
+        },
+        required: ['name', 'amount', 'unit']
+      }
+    },
+    instructions: {
+      type: 'array',
+      items: { type: 'string' }
+    },
+    prepTime: { type: 'string' },
+    cookTime: { type: 'string' },
+    servings: { type: 'number' },
+    difficulty: { 
+      type: 'string',
+      enum: ['Easy', 'Medium', 'Hard']
+    },
+    tags: {
+      type: 'array',
+      items: { type: 'string' }
+    }
+  },
+  required: ['title', 'description', 'ingredients', 'instructions', 'prepTime', 'cookTime', 'servings', 'difficulty', 'tags']
+} as const;
+
 // Function to generate a recipe based on ingredients
 async function generateRecipe(ingredients: string[]): Promise<Recipe> {
   const prompt = `
@@ -43,12 +80,13 @@ async function generateRecipe(ingredients: string[]): Promise<Recipe> {
     - Difficulty level (Easy, Medium, or Hard)
     - Relevant tags (e.g., vegetarian, gluten-free, etc.)
     
-    Format the response as a JSON object matching the Recipe interface structure.
+    IMPORTANT: Return ONLY the raw JSON object matching this schema, without any markdown formatting or code blocks:
+    ${JSON.stringify(recipeSchema, null, 2)}
   `;
 
   try {
     const { text } = await ai.generate(prompt);
-    // Clean the response by removing markdown code block formatting
+    // Clean the response by removing any markdown formatting
     const cleanedText = text.replace(/```json\n?|\n?```/g, '').trim();
     return JSON.parse(cleanedText) as Recipe;
   } catch (error) {
