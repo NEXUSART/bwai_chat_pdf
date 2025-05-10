@@ -29,28 +29,21 @@ interface Recipe {
 }
 
 // Function to generate a recipe based on ingredients
-async function generateRecipe(ingredients: string[]): Promise<Recipe> {
+async function generateRecipe(ingredients: string[]): Promise<string> {
   const prompt = `
-    Generate a recipe using the following ingredients: ${ingredients.join(', ')}.
-    The recipe should be structured and include:
-    - A creative title
-    - A brief description
-    - List of ingredients with amounts and units
-    - Step-by-step instructions
-    - Preparation time
-    - Cooking time
-    - Number of servings
-    - Difficulty level (Easy, Medium, or Hard)
-    - Relevant tags (e.g., vegetarian, gluten-free, etc.)
+    Create a simple recipe using these ingredients: ${ingredients.join(', ')}.
     
-    Format the response as a JSON object matching the Recipe interface structure.
+    Just list out:
+    - Recipe name
+    - Ingredients needed (with amounts)
+    - Simple step by step instructions
+    - How long it takes to make
+    - How many people it serves
   `;
 
   try {
     const { text } = await ai.generate(prompt);
-    // Clean the response by removing markdown code block formatting
-    const cleanedText = text.replace(/```json\n?|\n?```/g, '').trim();
-    return JSON.parse(cleanedText) as Recipe;
+    return text;
   } catch (error) {
     console.error("Error generating recipe:", error);
     throw error;
@@ -73,27 +66,9 @@ async function main() {
     console.log("Generating recipe with ingredients:", ingredients.join(", "));
     const recipe = await generateRecipe(ingredients);
     
-    // Print the recipe in a formatted way
+    // Print the recipe
     console.log("\n=== Generated Recipe ===\n");
-    console.log(`Title: ${recipe.title}`);
-    console.log(`Description: ${recipe.description}\n`);
-    
-    console.log("Ingredients:");
-    recipe.ingredients.forEach(ing => {
-      console.log(`- ${ing.amount} ${ing.unit} ${ing.name}`);
-    });
-    
-    console.log("\nInstructions:");
-    recipe.instructions.forEach((step, index) => {
-      console.log(`${index + 1}. ${step}`);
-    });
-    
-    console.log("\nAdditional Information:");
-    console.log(`Prep Time: ${recipe.prepTime}`);
-    console.log(`Cook Time: ${recipe.cookTime}`);
-    console.log(`Servings: ${recipe.servings}`);
-    console.log(`Difficulty: ${recipe.difficulty}`);
-    console.log(`Tags: ${recipe.tags.join(", ")}`);
+    console.log(recipe);
     
   } catch (error) {
     console.error("Error:", error);
